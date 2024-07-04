@@ -1,0 +1,188 @@
+% The example tex file for KU thesis.
+%% Konkuk University Thesis Example for LaTeX
+%%
+%% Author: Jinheung, Kim
+%% Email: jinheung.kim1216@gmail.com
+%% git: https://github.com/jinheungkim1216/KUthesis
+
+\documentclass[11pt]{report}
+
+\usepackage{KUthesis} % default type is doctor
+%\usepackage[type=doctor]{KUthesis}
+%\usepackage[type=master]{KUthesis}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+% BIB file
+\addbibresource{example.bib}
+
+% packages for examples
+\usepackage{lipsum}
+
+%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Document begin
+%
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Thesis information
+%
+%%%%%%%%%%%%%%%%%%%%%
+
+% Thesis Informations
+\thesisTitle{The thesis title} % title
+\thesisDateFront{August, 2024} % Date of front Page
+\thesisDateSubFront{May, 2024} % Date of SubFront Page
+\thesisDateApproval{May, 2024} % Date of Approval Page
+\thesisSupervisor{Supervisor}  % Your supervisor name
+\thesisDegree{Doctor of Philosophy in Physics} % Degree in subfontpage
+%\thesisDegree{Master of Science in Physics} % Degree in subfontpage
+
+% Author Informations
+\thesisLastName{Kim} % last name
+\thesisFirstName{Jinheung} % first name
+\thesisDepartment{Department of Physics} % Department
+\thesisSchool{Graduate School of Konkuk University} % Graduate School
+
+\thesisTitleKO{한글 제목} % title(korean)
+\thesisFirstNameKO{진흥} % first name (korean)
+\thesisLastNameKO{김} % last name (korean)
+\thesisDepartmentKO{물리학과} % Department (korean)
+\thesisSchoolKO{일반대학원} % Graduate School (korean)
+
+% Committee
+\thesisCommitteeI{Chairman}
+\thesisCommitteeII{Member 2}
+\thesisCommitteeIII{Member 3}
+\thesisCommitteeIV{Member 4}
+\thesisCommitteeV{Member 5}
+
+%\thesisCommitteeI{}
+%\thesisCommitteeII{}
+%\thesisCommitteeIII{}
+%\thesisCommitteeIV{}
+%\thesisCommitteeV{}
+
+%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Front page
+%
+%%%%%%%%%%%%%%%%%%%%%
+
+\pagenumbering{gobble} % no page number for front, subfront 
+\makeKUfront    % front page
+\makeKUsubfront % subfront page
+\makeKUapproval % approval
+\pagenumbering{roman} % Preface pages, the page number with roman
+
+% table of contents
+\tableofcontents
+
+% list of table
+\cleardoublepage
+\phantomsection  % fix hyperlink
+\addcontentsline{toc}{chapter}{\listtablenameold}
+\listoftables
+
+% list of figures
+\cleardoublepage
+\phantomsection  % fix hyperlink
+\addcontentsline{toc}{chapter}{\listfigurenameold}
+\listoffigures
+
+%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Abstract page (EN)
+%
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{KUabstract}
+\lipsum[1-2]\footnote{Keyword: Keyword1, Keyword2, ...}
+\end{KUabstract}
+
+
+\pagenumbering{arabic} % Switch to Arabic numerals for the main text
+\cleardoublepage
+%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Main text
+%
+%%%%%%%%%%%%%%%%%%%%%
+\chapter{This is a chapter}
+The citation styles are \cite{Weinberg:1967tq} and \cite{Glashow:1961tr,Salam:1964ry,Glashow:1970gm}.
+
+\section{This is a section}
+
+\begin{figure}[h] \centering
+\begin{center}
+\includegraphics[width=.1\textwidth]{UI_Mark.jpg}
+\caption{This is mark.}
+\end{center}
+\end{figure}
+
+
+\lipsum[1]
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  A & B & C & D\\
+  \hline
+  1 & 2 & 3 & 4\\
+  \hline
+\end{tabular}
+\end{center}
+\caption{The simple table}
+\end{table}
+
+\subsection{This is a subsection}
+\lipsum[1]
+\subsubsection{This is a subsubsection}
+\lipsum[1]
+
+
+%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Reference
+%
+%%%%%%%%%%%%%%%%%%%%%
+
+\printbibliography[title={\normalfont\fontsize{16}{16}\bfseries References}]
+\addcontentsline{toc}{chapter}{References}
+
+\cleardoublepage
+\phantomsection  
+%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Appendix
+%
+%%%%%%%%%%%%%%%%%%%%%
+
+\chapter*{Appendix}
+%% provide three setup instructions:
+\addcontentsline{toc}{chapter}{Appendix} % write to the toc file
+\setcounter{section}{0}
+\renewcommand\thesection{\Alph{section}}
+\section{The first appendix }
+
+This is appendex
+
+
+%%%%%%%%%%%%%%%%%%%%%
+% 
+%  Abstract page (KOs)
+%
+%%%%%%%%%%%%%%%%%%%%%
+\begin{KUabstractKO}
+한글 초록 \\
+\lipsum[1-2]\footnote{Keyword: 키워드1, 키워드2, ...}
+\end{KUabstractKO}
+
+\end{document}
+

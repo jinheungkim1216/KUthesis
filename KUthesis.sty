@@ -1,0 +1,332 @@
+% KU-thesis.sty
+%% Konkuk University Thesis Templeate for LaTeX
+%%
+%% Author: Jinheung, Kim
+%% Email: jinheung.kim1216@gmail.com
+%% git: https://github.com/jinheungkim1216/KUthesis
+
+%% used packages
+%% kotex, geometry, setspace, tocloft, titlesec, biblatex
+
+\NeedsTeXFormat{LaTeX2e}
+
+\ProvidesPackage{KUthesis}[2024/07/04 v1.0 Konkuk Univ. Thesis package]
+\RequirePackage{kotex}
+
+
+\RequirePackage{kvoptions}
+
+% Define options
+\SetupKeyvalOptions{
+  family=KUthesis,
+  prefix=KUthesis@
+}
+\DeclareStringOption[doctor]{type} % Default to "doctor"
+
+\ProcessKeyvalOptions*
+
+
+
+% Custom command for the thesis title
+\newcommand{\thesisTitle}[1]{\def\@thesisTitle{#1}} % Thesis title
+\newcommand{\thesisDateFront}[1]{\def\@thesisDateFront{#1}} % Date for front page
+\newcommand{\thesisDateSubFront}[1]{\def\@thesisDateSubFront{#1}} % Date for subfront page
+\newcommand{\thesisDateApproval}[1]{\def\@thesisDateApproval{#1}} % Date for Approval page
+\newcommand{\thesisSupervisor}[1]{\def\@thesisSupervisor{#1}} % Name of Supervisor
+\newcommand{\thesisDegree}[1]{\def\@thesisDegree{#1}} % Degree in subfront page
+
+% Custom command for the author's name
+\newcommand{\thesisFirstName}[1]{\def\@thesisFirstName{#1}} % First name of author
+\newcommand{\thesisLastName}[1]{\def\@thesisLastName{#1}} % Last name of author
+\newcommand{\thesisDepartment}[1]{\def\@thesisDepartment{#1}} % Department
+\newcommand{\thesisSchool}[1]{\def\@thesisSchool{#1}} % Graduate School
+
+% Korean for abstract
+\newcommand{\thesisTitleKO}[1]{\def\@thesisTitleKO{#1}} 
+\newcommand{\thesisFirstNameKO}[1]{\def\@thesisFirstNameKO{#1}}
+\newcommand{\thesisLastNameKO}[1]{\def\@thesisLastNameKO{#1}}
+\newcommand{\thesisDepartmentKO}[1]{\def\@thesisDepartmentKO{#1}}
+\newcommand{\thesisSchoolKO}[1]{\def\@thesisSchoolKO{#1}}
+
+% Committee Members for approval page
+\newcommand{\thesisCommitteeI}[1]{\def\@thesisCommitteeI{#1}} 
+\newcommand{\thesisCommitteeII}[1]{\def\@thesisCommitteeII{#1}}
+\newcommand{\thesisCommitteeIII}[1]{\def\@thesisCommitteeIII{#1}}
+\newcommand{\thesisCommitteeIV}[1]{\def\@thesisCommitteeIV{#1}}
+\newcommand{\thesisCommitteeV}[1]{\def\@thesisCommitteeV{#1}}
+
+
+\newcommand{\thesisApprovalBox}[2]{\makebox[2.5cm]{\raggedleft\textbf{#1}} \underline{\normalfont\fontsize{14}{14}\textbf{\makebox[5.7cm]{#2}(Seal)}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page layout
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%\RequirePackage[b4j, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm, headheight=0mm, footskip=0mm]{geometry}
+\RequirePackage{geometry}
+\geometry{
+  paper=b5j,
+  margin=2.5cm
+}
+\RequirePackage{setspace}
+\linespread{1.6}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Front Page
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\newcommand{\makeKUfront}{
+\cleardoublepage
+\phantomsection  
+\begingroup % grouping start
+\centering % centering
+%% Supervior
+\begin{flushleft}
+
+\fontsize{14}{14}
+\ifthenelse{\equal{\KUthesis@type}{doctor}}{\textbf{Dissertation for Degree of Doctor}
+}{\textbf{Thesis for Degree of Master}}\\
+\textbf{Supervisor: Prof. \@thesisSupervisor}
+\end{flushleft}
+
+\vspace{3cm}
+
+\fontsize{20}{14}\textbf{\@thesisTitle}\\ % title
+
+\vfill
+% author
+\fontsize{14}{14}\textbf{Submitted by} \\
+\vspace{1cm}
+\fontsize{18}{18}\textbf{\@thesisFirstName\ \@thesisLastName} \\
+% date
+\fontsize{16}{16}\textbf{\@thesisDateFront} \\
+
+\vspace{1cm}
+
+% department
+\fontsize{16}{16}
+\textbf{\@thesisDepartment}\\ 
+\textbf{\@thesisSchool}\\
+\vspace{0.5cm}
+\endgroup % grouping end
+\cleardoublepage
+} %  end of front page
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Subfront Page
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\makeKUsubfront}{
+\cleardoublepage
+\phantomsection  
+\begingroup % grouping start
+\centering % centering
+
+%\fontsize{20}{26}\textbf{\@thesistitle}\\ % title
+\huge\textbf{\@thesisTitle}\\ % title
+
+\vfill
+
+\Large\textbf{
+\ifthenelse{\equal{\KUthesis@type}{doctor}}{A Dissertation 
+}{A Master's Thesis}
+\\
+submitted to the \@thesisDepartment \\
+and the \@thesisSchool \\
+in partial fulfillment of the \\
+requirements for the degree of \\
+\@thesisDegree\\}
+
+\vspace{1cm}
+
+\fontsize{14}{14}\textbf{Submitted by} \\
+\LARGE \textbf{\@thesisFirstName\ \@thesisLastName} \\
+
+\vspace{4cm}
+
+\Large \textbf{\@thesisDateSubFront}\\
+\vspace{1cm}
+\endgroup
+\cleardoublepage
+} % end of subfront page
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Approval Page
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\makeKUapproval}{
+\cleardoublepage
+\phantomsection  
+\begingroup % grouping start
+\centering % centering
+{\ }\\
+\normalfont\fontsize{18}{18}\textbf{
+This certifies that the Dissertation of \\
+{\@thesisFirstName} {\@thesisLastName} is approved.
+}
+
+{\ }\\
+
+\normalfont\fontsize{14}{14}\textbf{
+Approved by Examination Committee}\\
+
+\vspace{2cm}
+\ifthenelse{\equal{\KUthesis@type}{doctor}}
+{ % Doctor
+\thesisApprovalBox{Chairman}{\@thesisCommitteeI}\\
+\vspace{0.5cm}
+\thesisApprovalBox{Member}{\@thesisCommitteeII}\\
+\vspace{0.5cm}
+\thesisApprovalBox{Member}{\@thesisCommitteeIII}\\
+\vspace{0.5cm}
+\thesisApprovalBox{Member}{\@thesisCommitteeIV}\\
+\vspace{0.5cm}
+\thesisApprovalBox{Member}{\@thesisCommitteeV}\\
+} % Doctor
+{ % Mater
+\thesisApprovalBox{Chairman}{\@thesisCommitteeI}\\
+\vspace{0.5cm}
+\thesisApprovalBox{Member}{\@thesisCommitteeII}\\
+\vspace{0.5cm}
+\thesisApprovalBox{Member}{\@thesisCommitteeIII}\\
+} % Master
+
+%\vspace{1.5cm}
+\vfill
+\fontsize{16}{16}\textbf{\@thesisDateApproval} \\
+\vspace{1cm}
+\fontsize{16}{16} \textbf{\@thesisSchool} \\
+\vspace{3.3cm}
+\endgroup
+\cleardoublepage
+} % end of approval page
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table of Contents
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{tocloft}
+% Customize names for TOC, List of Tables, List of Figures
+\renewcommand{\contentsname}{\centering Table of Contents \\}
+\newcommand{\listtablenameold}{List of Tables}
+\renewcommand{\listtablename}{\centering \listtablenameold \\}
+\newcommand{\listfigurenameold}{List of Figures}
+\renewcommand{\listfigurename}{\centering \listfigurenameold \\}
+
+% Customize TOC, List of Tables, and List of Figures formatting
+\renewcommand{\cfttoctitlefont}{\normalfont\fontsize{16}{20}\bfseries\centering} % 16pt, Bold, Centered
+\renewcommand{\cftloftitlefont}{\normalfont\fontsize{16}{20}\bfseries\centering} % 16pt, Bold, Centered
+\renewcommand{\cftlottitlefont}{\normalfont\fontsize{16}{20}\bfseries\centering} % 16pt, Bold, Centered
+
+% Adjust space before each list title
+\setlength{\cftbeforetoctitleskip}{0pt} % Remove space before TOC title
+\setlength{\cftbeforeloftitleskip}{0pt} % Remove space before LOT title
+\setlength{\cftbeforelottitleskip}{0pt} % Remove space before LOF title
+
+% Adjust space after each title
+\setlength{\cftaftertoctitleskip}{10pt} % Space after TOC title
+\setlength{\cftafterloftitleskip}{10pt} % Space after LOT title
+\setlength{\cftafterlottitleskip}{10pt} % Space after LOF title
+
+% Add dots
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} % for chapters
+
+% Indents Adjustments
+\setlength{\cftsecindent}{0.5cm} % for section
+\setlength{\cftsubsecindent}{1cm} % for subsection
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% abstract
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Custom Abstract Environment
+\newenvironment{KUabstract}{
+  \cleardoublepage
+  \phantomsection  
+  \addcontentsline{toc}{chapter}{Abstract} % Add to TOC
+  \begin{flushleft}\normalfont\fontsize{14}{14}\bfseries Abstract\end{flushleft} % Abstract title
+  \begin{center}
+  \normalfont\fontsize{16}{20}\bfseries\@thesisTitle
+  \end{center}
+  \vspace{0.5cm}
+  \begin{flushright}
+    \normalfont\fontsize{11}{11}\bfseries\@thesisLastName, \normalfont\fontsize{11}{11}\bfseries\@thesisFirstName\\ % Author's name
+    \normalfont\fontsize{11}{11}\bfseries\@thesisDepartment \\ % Author's name
+    \normalfont\fontsize{11}{11}\bfseries\@thesisSchool % Author's name
+  \end{flushright}
+  \vspace{0.5cm}
+  
+}{
+  \cleardoublepage % Start a new page after the abstract
+  %\pagenumbering{arabic}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% abstract KO
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Custom Abstract Environment
+\newenvironment{KUabstractKO}{
+  \cleardoublepage
+  \phantomsection   
+  \addcontentsline{toc}{chapter}{Abstract (in Korean)} % Add to TOC
+  \begin{flushleft}\normalfont\fontsize{14}{14}\bfseries Abstract (in Korean)\end{flushleft} % Abstract title
+  \begin{center}
+  \normalfont\fontsize{16}{20}\bfseries\@thesisTitleKO
+  \end{center}
+  \vspace{0.5cm}
+  \begin{flushright}
+    \normalfont\fontsize{11}{11}\bfseries\@thesisLastNameKO\normalfont\fontsize{11}{11}\bfseries\@thesisFirstNameKO\\ % Author's name
+    \normalfont\fontsize{11}{11}\bfseries\@thesisDepartmentKO \\ % Author's name
+    \normalfont\fontsize{11}{11}\bfseries\@thesisSchoolKO % Author's name
+  \end{flushright}
+  \vspace{0.5cm}
+  
+}{
+  \cleardoublepage % Start a new page after the abstract
+  %\pagenumbering{arabic}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Format of titles
+% Chapter, section, ...
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{titlesec}
+
+% Custom chapter formatting
+\titleformat{\chapter}[block]
+  {\normalfont\fontsize{16}{20}\bfseries\centering} % Font size 16pt, bold, centered
+  {\thechapter.} % Label with chapter number
+  {16pt} % Space between label and title
+  {} % Title format
+\titlespacing*{\chapter}
+  {0pt} % Left margin
+  {0pt} % Space before
+  {40pt} % Space after
+\renewcommand{\thechapter}{\Roman{chapter}} % Roman numerals for chapters
+
+% Custom section formatting
+\titleformat{\section}
+  {\normalfont\fontsize{14}{18}\bfseries\raggedright} % Font size 14pt, bold
+  {\thesection} % Label with section number
+  {1em} % Space between label and title
+  {} % Title format
+\titlespacing*{\section}
+  {0pt} % Left margin
+  {24pt} % Space before
+  {12pt} % Space after
+\renewcommand{\thesection}{\arabic{section}} % Arabic numbering for sections
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% References
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage[backend=biber, style=numeric-comp, sorting=none]{biblatex} % Change style here
+%\usepackage[toc]{tocbibind} %Includes "References" in the table of contents
+
+
+%\RequirePackage[backend=biber, style=ieee, sorting=nyt]{biblatex} % Change style here
+%\renewcommand{\bibname}{\normalfont\fontsize{16}{16}\bfseries\centering References} % Change the title of reference
+%\renewcommand{\bibsection}{Whatever You Prefer}

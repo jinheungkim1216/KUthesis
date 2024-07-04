@@ -1,0 +1,10 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!README.md
+!example.tex
+!example.bib
+!KUthesis.sty
+!UI_Mark.jpg
