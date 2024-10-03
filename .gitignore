@@ -4,7 +4,10 @@
 # But not these files...
 !.gitignore
 !README.md
-!example.tex
+!example_eng.tex
+!example_kor.tex
+!example_eng.pdf
+!example_kor.pdf
 !example.bib
 !KUthesis.sty
 !UI_Mark.jpg

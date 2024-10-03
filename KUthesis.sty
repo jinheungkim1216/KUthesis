@@ -4,16 +4,19 @@
 %% Author: Jinheung, Kim
 %% Email: jinheung.kim1216@gmail.com
 %% git: https://github.com/jinheungkim1216/KUthesis
+%% version: 2.0.0
 
 %% used packages
 %% kotex, geometry, setspace, tocloft, titlesec, biblatex
+
 
 \NeedsTeXFormat{LaTeX2e}
 
 \ProvidesPackage{KUthesis}[2024/07/04 v1.0 Konkuk Univ. Thesis package]
 \RequirePackage{kotex}
+%\usepackage{fontspec}
 
-
+\RequirePackage{ifthen}
 \RequirePackage{kvoptions}
 
 % Define options
@@ -21,14 +24,18 @@
   family=KUthesis,
   prefix=KUthesis@
 }
-\DeclareStringOption[doctor]{type} % Default to "doctor"
-
+\DeclareStringOption[doctor]{type} % Degree Default to "doctor" [doctor,master]
+\DeclareStringOption[eng]{lang} % Language Defulat to "eng" [kor,eng]
 \ProcessKeyvalOptions*
 
 
 
 % Custom command for the thesis title
 \newcommand{\thesisTitle}[1]{\def\@thesisTitle{#1}} % Thesis title
+\newcommand{\thesisSubTitle}[1]{\def\@thesisSubTitle{#1}}% Thesis subtitle
+\newcommand{\thesisTitleKO}[1]{\def\@thesisTitleKO{#1}} % korean thesis title
+\newcommand{\thesisSubTitleKO}[1]{\def\@thesisSubTitleKO{#1}} % korean thesis subtitle
+
 \newcommand{\thesisDateFront}[1]{\def\@thesisDateFront{#1}} % Date for front page
 \newcommand{\thesisDateSubFront}[1]{\def\@thesisDateSubFront{#1}} % Date for subfront page
 \newcommand{\thesisDateApproval}[1]{\def\@thesisDateApproval{#1}} % Date for Approval page
@@ -42,7 +49,6 @@
 \newcommand{\thesisSchool}[1]{\def\@thesisSchool{#1}} % Graduate School
 
 % Korean for abstract
-\newcommand{\thesisTitleKO}[1]{\def\@thesisTitleKO{#1}} 
 \newcommand{\thesisFirstNameKO}[1]{\def\@thesisFirstNameKO{#1}}
 \newcommand{\thesisLastNameKO}[1]{\def\@thesisLastNameKO{#1}}
 \newcommand{\thesisDepartmentKO}[1]{\def\@thesisDepartmentKO{#1}}
@@ -55,8 +61,16 @@
 \newcommand{\thesisCommitteeIV}[1]{\def\@thesisCommitteeIV{#1}}
 \newcommand{\thesisCommitteeV}[1]{\def\@thesisCommitteeV{#1}}
 
+\newcommand{\thesisApprovalBox}[2]{
+    \makebox[2.5cm]{
+        \raggedleft\textbf{#1}}
+        \underline{\normalfont\fontsize{14}{14}
+        \textbf{\makebox[5.7cm]{#2}\ifthenelse{\equal{\KUthesis@lang}{eng}}{(Seal)}{(인)}}
+    }}
 
-\newcommand{\thesisApprovalBox}[2]{\makebox[2.5cm]{\raggedleft\textbf{#1}} \underline{\normalfont\fontsize{14}{14}\textbf{\makebox[5.7cm]{#2}(Seal)}}}
+\newcommand{\thesisKeywordsKor}[1]{\def\@thesisKeywordsKor{#1}}
+\newcommand{\thesisKeywords}[1]{\def\@thesisKeywords{#1}}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % Page layout
@@ -74,8 +88,6 @@
 % Front Page
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
 \newcommand{\makeKUfront}{
 \cleardoublepage
 \phantomsection  
@@ -83,32 +95,65 @@
 \centering % centering
 %% Supervior
 \begin{flushleft}
-
 \fontsize{14}{14}
-\ifthenelse{\equal{\KUthesis@type}{doctor}}{\textbf{Dissertation for Degree of Doctor}
-}{\textbf{Thesis for Degree of Master}}\\
-\textbf{Supervisor: Prof. \@thesisSupervisor}
+\ifthenelse{\equal{\KUthesis@lang}{eng}}
+    { % Eng
+        \ifthenelse{\equal{\KUthesis@type}{doctor}}
+        {\textbf{Dissertation for Degree of Doctor}}
+        {\textbf{Thesis for Degree of Master}}\\
+        \textbf{Supervisor: Prof. \@thesisSupervisor}
+    }
+    { % Kor
+        \ifthenelse{\equal{\KUthesis@type}{doctor}}
+        {\textbf{박사학위 청구논문}}
+        {\textbf{석사학위 청구논문}}\\
+        \textbf{지도교수 \@thesisSupervisor}}
+
 \end{flushleft}
 
-\vspace{3cm}
+\vspace{2cm}
+\ifthenelse{\equal{\KUthesis@lang}{eng}}
+    {  % Eng
+        \fontsize{20}{20}\textbf{\@thesisTitle}\\ % title
+        \vspace{0.5cm}
+        \ifthenelse{\equal{\@thesisSubTitle}{}} % subtitle
+        {}
+        {\fontsize{16}{16}\textbf{\@thesisSubTitle}\\}
+        \vfill
+        % author
+        \fontsize{14}{14}\textbf{Submitted by} \\
+        \fontsize{18}{18}\textbf{\@thesisFirstName\ \@thesisLastName} \\
+        \vspace{1cm}
+        % date
+        \fontsize{16}{16}\textbf{\@thesisDateFront} \\
+        \vspace{1cm}
+        % department
+        \fontsize{16}{16}
+        \textbf{\@thesisDepartment}\\ 
+        \textbf{\@thesisSchool}\\
+        \vspace{0.5cm}
+    }
+    {  % Kor
+    \fontsize{20}{20}\textbf{\@thesisTitleKO}\\ % title
+    \vspace{0.5cm}
+    \ifthenelse{\equal{\@thesisSubTitleKO}{}} % subtitle
+    {}
+    {\fontsize{16}{16}\textbf{\@thesisSubTitleKO}\\}
+    \vfill
+    % date
+    \fontsize{16}{16}\textbf{\@thesisDateFront} \\
+    \vspace{3cm}
 
-\fontsize{20}{14}\textbf{\@thesisTitle}\\ % title
-
-\vfill
-% author
-\fontsize{14}{14}\textbf{Submitted by} \\
-\vspace{1cm}
-\fontsize{18}{18}\textbf{\@thesisFirstName\ \@thesisLastName} \\
-% date
-\fontsize{16}{16}\textbf{\@thesisDateFront} \\
-
-\vspace{1cm}
-
-% department
-\fontsize{16}{16}
-\textbf{\@thesisDepartment}\\ 
-\textbf{\@thesisSchool}\\
-\vspace{0.5cm}
+    % department
+    \fontsize{18}{18}\textbf{\@thesisSchoolKO}\\
+    \vspace{0.5cm}
+    \fontsize{16}{16}\textbf{\@thesisDepartmentKO}\\ 
+    \vspace{0.5cm}
+    % author
+    \fontsize{18}{18}\textbf{\@thesisLastNameKO\@thesisFirstNameKO} \\
+    \vspace{0.5cm}
+    }
+    
 \endgroup % grouping end
 \cleardoublepage
 } %  end of front page
@@ -123,30 +168,53 @@
 \begingroup % grouping start
 \centering % centering
 
-%\fontsize{20}{26}\textbf{\@thesistitle}\\ % title
-\huge\textbf{\@thesisTitle}\\ % title
+\ifthenelse{\equal{\KUthesis@lang}{eng}}
+    { % Eng
+        %\fontsize{20}{26}\textbf{\@thesistitle}\\ % title
+        \fontsize{20}{20}\textbf{\@thesisTitle}\\[8pt] % title
+        \fontsize{16}{16}\textbf{\@thesisSubTitle}\\ % title
+        \vfill
+        % Disseration
+        \fontsize{14}{14}\textbf{
+        \ifthenelse{\equal{\KUthesis@type}{doctor}}{A Dissertation 
+        }{A Master's Thesis}\\
+        submitted to the \@thesisDepartment \\
+        and the \@thesisSchool \\
+        in partial fulfillment of the \\
+        requirements for the degree of \\
+        \@thesisDegree\\}
 
-\vfill
+        \vspace{3cm}
 
-\Large\textbf{
-\ifthenelse{\equal{\KUthesis@type}{doctor}}{A Dissertation 
-}{A Master's Thesis}
-\\
-submitted to the \@thesisDepartment \\
-and the \@thesisSchool \\
-in partial fulfillment of the \\
-requirements for the degree of \\
-\@thesisDegree\\}
+        \fontsize{14}{14}\textbf{Submitted by} \\
+        \LARGE \textbf{\@thesisFirstName\ \@thesisLastName} \\
 
-\vspace{1cm}
+        \vspace{4cm}
 
-\fontsize{14}{14}\textbf{Submitted by} \\
-\LARGE \textbf{\@thesisFirstName\ \@thesisLastName} \\
+        \Large \textbf{\@thesisDateSubFront}\\
+        \vspace{1cm}
+    }
+    { % Kor
+    
+        %\fontsize{20}{26}\textbf{\@thesistitle}\\ % title
+        \fontsize{20}{20}\textbf{\@thesisTitleKO}\\[10pt] % title
+        \fontsize{16}{16}\textbf{\@thesisSubTitleKO}\\[8pt] % title
+        \fontsize{16}{16}\textbf{\@thesisTitle}\\[8pt] % title
+        \fontsize{14}{14}\textbf{\@thesisSubTitle}\\ % title
 
-\vspace{4cm}
+        \vfill
 
-\Large \textbf{\@thesisDateSubFront}\\
-\vspace{1cm}
+        \fontsize{16}{16}\textbf{이 논문을
+        \ifthenelse{\equal{\KUthesis@type}{doctor}}{\@thesisDegree~박사}{\@thesisDegree~석사}학위 청구논문으로 제출합니다.}
+
+        \vspace{4.5cm}
+
+        \fontsize{16}{16}\textbf{\@thesisDateSubFront}\\[3cm]
+        \fontsize{18}{18}\textbf{\@thesisSchoolKO}\\[0.5cm]
+        \fontsize{16}{16}\textbf{\@thesisDepartmentKO}\\[0.5cm]
+        \fontsize{18}{18}\textbf{\@thesisLastNameKO\@thesisFirstNameKO}\\
+        \vspace{0.5cm}
+    }
 \endgroup
 \cleardoublepage
 } % end of subfront page
@@ -161,45 +229,83 @@ requirements for the degree of \\
 \phantomsection  
 \begingroup % grouping start
 \centering % centering
-{\ }\\
-\normalfont\fontsize{18}{18}\textbf{
-This certifies that the Dissertation of \\
-{\@thesisFirstName} {\@thesisLastName} is approved.
-}
+\ifthenelse{\equal{\KUthesis@lang}{eng}}
+    { % Eng
+        {\ }\\
+        \normalfont\fontsize{18}{18}\textbf{
+        This certifies that the Dissertation of \\
+        {\@thesisFirstName} {\@thesisLastName} is approved.
+        }
 
-{\ }\\
+        {\ }\\
 
-\normalfont\fontsize{14}{14}\textbf{
-Approved by Examination Committee}\\
+        \normalfont\fontsize{14}{14}\textbf{
+        Approved by Examination Committee}\\
 
-\vspace{2cm}
-\ifthenelse{\equal{\KUthesis@type}{doctor}}
-{ % Doctor
-\thesisApprovalBox{Chairman}{\@thesisCommitteeI}\\
-\vspace{0.5cm}
-\thesisApprovalBox{Member}{\@thesisCommitteeII}\\
-\vspace{0.5cm}
-\thesisApprovalBox{Member}{\@thesisCommitteeIII}\\
-\vspace{0.5cm}
-\thesisApprovalBox{Member}{\@thesisCommitteeIV}\\
-\vspace{0.5cm}
-\thesisApprovalBox{Member}{\@thesisCommitteeV}\\
-} % Doctor
-{ % Mater
-\thesisApprovalBox{Chairman}{\@thesisCommitteeI}\\
-\vspace{0.5cm}
-\thesisApprovalBox{Member}{\@thesisCommitteeII}\\
-\vspace{0.5cm}
-\thesisApprovalBox{Member}{\@thesisCommitteeIII}\\
-} % Master
+        \vspace{2cm}
+        \ifthenelse{\equal{\KUthesis@type}{doctor}}
+        { % Doctor
+        \thesisApprovalBox{Chairman}{\@thesisCommitteeI}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{Member}{\@thesisCommitteeII}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{Member}{\@thesisCommitteeIII}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{Member}{\@thesisCommitteeIV}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{Member}{\@thesisCommitteeV}\\
+        } % Doctor
+        { % Mater
+        \thesisApprovalBox{Chairman}{\@thesisCommitteeI}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{Member}{\@thesisCommitteeII}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{Member}{\@thesisCommitteeIII}\\
+        } % Master
 
-%\vspace{1.5cm}
-\vfill
-\fontsize{16}{16}\textbf{\@thesisDateApproval} \\
-\vspace{1cm}
-\fontsize{16}{16} \textbf{\@thesisSchool} \\
-\vspace{3.3cm}
+        %\vspace{1.5cm}
+        \vfill
+        \fontsize{16}{16}\textbf{\@thesisDateApproval} \\
+        \vspace{1cm}
+        \fontsize{16}{16} \textbf{\@thesisSchool} \\
+        \vspace{3.3cm}
+    }
+    { % Kor
+        \vspace*{1cm}
+        \normalfont\fontsize{16}{16}\textbf{
+        {\@thesisLastNameKO}{\@thesisFirstNameKO}의 \ifthenelse{\equal{\KUthesis@type}{doctor}}                {\@thesisDegree~박사}{\@thesisDegree~석사}학위 청구논문을 인준함.
+        }\\
+
+        \vspace{5.5cm}
+        \ifthenelse{\equal{\KUthesis@type}{doctor}}
+        { % Doctor
+        \thesisApprovalBox{심사위원장}{\@thesisCommitteeI}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{심사위원\hspace{14pt}}{\@thesisCommitteeII}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{심사위원\hspace{14pt}}{\@thesisCommitteeIII}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{심사위원\hspace{14pt}}{\@thesisCommitteeIV}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{심사위원\hspace{14pt}}{\@thesisCommitteeV}\\
+        } % Doctor
+        { % Mater
+        \thesisApprovalBox{심사위원장}{\@thesisCommitteeI}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{심사위원\hspace{14pt}}{\@thesisCommitteeII}\\
+        \vspace{0.5cm}
+        \thesisApprovalBox{심사위원\hspace{14pt}}{\@thesisCommitteeIII}\\
+        } % Master
+
+        %\vspace{1.5cm}
+        \vfill
+        \fontsize{16}{16}\textbf{\@thesisDateApproval} \\
+        \vspace{2cm}
+        \fontsize{18}{18} \textbf{\@thesisSchoolKO} \\
+        \vspace{1cm}
+    }
 \endgroup
+
 \cleardoublepage
 } % end of approval page
 
@@ -208,11 +314,22 @@ Approved by Examination Committee}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \RequirePackage{tocloft}
 % Customize names for TOC, List of Tables, List of Figures
-\renewcommand{\contentsname}{\centering Table of Contents \\}
-\newcommand{\listtablenameold}{List of Tables}
+
+\ifthenelse{\equal{\KUthesis@lang}{eng}}
+    {  % Eng
+        \renewcommand{\contentsname}{\centering Table of Contents \\}
+        \newcommand{\listtablenameold}{List of Table}
+        \newcommand{\listfigurenameold}{List of Figures}
+
+    }
+    {  % Kor
+        \renewcommand{\contentsname}{\centering 목차 \\}    
+        \newcommand{\listtablenameold}{표~목차}
+        \newcommand{\listfigurenameold}{그림~목차}
+    }
 \renewcommand{\listtablename}{\centering \listtablenameold \\}
-\newcommand{\listfigurenameold}{List of Figures}
 \renewcommand{\listfigurename}{\centering \listfigurenameold \\}
+
 
 % Customize TOC, List of Tables, and List of Figures formatting
 \renewcommand{\cfttoctitlefont}{\normalfont\fontsize{16}{20}\bfseries\centering} % 16pt, Bold, Centered
@@ -234,32 +351,76 @@ Approved by Examination Committee}\\
 
 % Indents Adjustments
 \setlength{\cftsecindent}{0.5cm} % for section
-\setlength{\cftsubsecindent}{1cm} % for subsection
+\setlength{\cftsubsecindent}{0.5cm} % for subsection
 
+
+\ifthenelse{\equal{\KUthesis@lang}{eng}}
+    { % Eng
+    }
+    { % Kor : 장절 조정
+        \renewcommand{\cftchappresnum}{제}
+        \renewcommand{\cftchapaftersnum}{장}
+        \renewcommand{\cftchapnumwidth}{33pt}
+
+        \renewcommand{\cftsecpresnum}{제}
+        \renewcommand{\cftsecaftersnum}{절}
+        \renewcommand{\cftsecindent}{11pt}
+        \renewcommand{\cftsecnumwidth}{33pt}
+
+        \renewcommand{\cftsubsecaftersnum}{.}
+        %\renewcommand{\cftsubsecindent}{22pt}
+        \renewcommand{\cftsubsecindent}{22pt}
+        \renewcommand{\cftsubsecnumwidth}{30pt}
+
+        \renewcommand{\cftsubsubsecaftersnum}{.}
+        \renewcommand{\cftsubsubsecindent}{33pt}
+        \renewcommand{\cftsubsubsecnumwidth}{44pt}
+
+        \renewcommand\cftfignumwidth{66pt}
+        \renewcommand{\figurename}{}
+        \counterwithin{figure}{chapter}
+        \renewcommand{\thefigure}{\textlangle 그림 \arabic{chapter}-\arabic{figure}\textrangle}
+
+        \renewcommand\cfttabnumwidth{55pt}
+        \renewcommand{\tablename}{}
+        \counterwithin{table}{chapter}
+        \renewcommand{\thetable}{\textlangle 표 \arabic{chapter}-\arabic{table}\textrangle}
+    }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % abstract
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % Custom Abstract Environment
 \newenvironment{KUabstract}{
-  \cleardoublepage
-  \phantomsection  
-  \addcontentsline{toc}{chapter}{Abstract} % Add to TOC
-  \begin{flushleft}\normalfont\fontsize{14}{14}\bfseries Abstract\end{flushleft} % Abstract title
-  \begin{center}
-  \normalfont\fontsize{16}{20}\bfseries\@thesisTitle
-  \end{center}
-  \vspace{0.5cm}
-  \begin{flushright}
-    \normalfont\fontsize{11}{11}\bfseries\@thesisLastName, \normalfont\fontsize{11}{11}\bfseries\@thesisFirstName\\ % Author's name
-    \normalfont\fontsize{11}{11}\bfseries\@thesisDepartment \\ % Author's name
-    \normalfont\fontsize{11}{11}\bfseries\@thesisSchool % Author's name
-  \end{flushright}
-  \vspace{0.5cm}
-  
-}{
-  \cleardoublepage % Start a new page after the abstract
-  %\pagenumbering{arabic}
+    \cleardoublepage
+    \phantomsection
+    \ifthenelse{\equal{\KUthesis@lang}{eng}}
+    {  % eng
+        \addcontentsline{toc}{chapter}{Abstract} % Add to TOC
+        \begin{flushleft}\normalfont\fontsize{14}{14}\bfseries Abstract \end{flushleft} % Abstract title
+    }
+    {  % Kor
+        \addcontentsline{toc}{chapter}{ABSTRACT} % Add to TOC
+        \begin{flushleft}\normalfont\fontsize{14}{14}\bfseries ABSTRACT \end{flushleft} % Abstract title
+    }
+    \begin{center}
+    \normalfont\fontsize{16}{20}\bfseries\@thesisTitle \\
+    \ifthenelse{\equal{\@thesisSubTitle}{}}{}
+    {\normalfont\fontsize{14}{14}\bfseries\@thesisSubTitle}
+    \end{center}
+    \vspace{0.5cm}
+    \begin{flushright} % author info
+        \normalfont\fontsize{11}{11}\bfseries\@thesisLastName, \normalfont\fontsize{11}{11}\bfseries\@thesisFirstName\\ % Author's name
+        \normalfont\fontsize{11}{11}\bfseries\@thesisDepartment \\ % Author's name
+        \normalfont\fontsize{11}{11}\bfseries\@thesisSchool % Author's name
+    \end{flushright}
+    \vspace{0.5cm}
+    }{
+    \vfill
+    {\noindent\rule{\linewidth}{.5mm}}
+    { \normalfont\fontsize{9}{9}\textbf{Keyword} : \@thesisKeywords}
+    \cleardoublepage % Start a new page after the abstract
+    %\pagenumbering{arabic}
 }
 
 
@@ -270,20 +431,37 @@ Approved by Examination Committee}\\
 \newenvironment{KUabstractKO}{
   \cleardoublepage
   \phantomsection   
-  \addcontentsline{toc}{chapter}{Abstract (in Korean)} % Add to TOC
-  \begin{flushleft}\normalfont\fontsize{14}{14}\bfseries Abstract (in Korean)\end{flushleft} % Abstract title
-  \begin{center}
-  \normalfont\fontsize{16}{20}\bfseries\@thesisTitleKO
-  \end{center}
-  \vspace{0.5cm}
-  \begin{flushright}
-    \normalfont\fontsize{11}{11}\bfseries\@thesisLastNameKO\normalfont\fontsize{11}{11}\bfseries\@thesisFirstNameKO\\ % Author's name
-    \normalfont\fontsize{11}{11}\bfseries\@thesisDepartmentKO \\ % Author's name
-    \normalfont\fontsize{11}{11}\bfseries\@thesisSchoolKO % Author's name
-  \end{flushright}
-  \vspace{0.5cm}
-  
-}{
+
+  \ifthenelse{\equal{\KUthesis@lang}{eng}}
+  { % Eng
+      \addcontentsline{toc}{chapter}{Abstract (in Korean)} % Add to TOC
+      \begin{flushleft}\normalfont\fontsize{14}{14}\bfseries Abstract (in Korean)\end{flushleft} % Abstract title
+      \begin{center}
+      \normalfont\fontsize{16}{16}\bfseries\@thesisTitleKO\\[8pt]
+      \normalfont\fontsize{14}{14}\bfseries\@thesisSubTitleKO
+      \end{center}
+      \vspace{0.5cm}
+      \begin{flushright} % Author info
+          \normalfont\fontsize{11}{11}\bfseries\@thesisLastNameKO\normalfont\fontsize{11}{11}\bfseries\@thesisFirstNameKO\\ % Author's name
+          \normalfont\fontsize{11}{11}\bfseries\@thesisDepartmentKO \\ % Author's name
+          \normalfont\fontsize{11}{11}\bfseries\@thesisSchoolKO % Author's name
+      \end{flushright}
+      \vspace{0.5cm}
+  }
+  { % Kor
+      \addcontentsline{toc}{chapter}{국문초록} % Add to TOC
+      \begin{flushleft}\normalfont\fontsize{14}{14}\bfseries 국문초록\end{flushleft} % Abstract title
+      \begin{center}
+      \normalfont\fontsize{16}{16}\bfseries\@thesisTitleKO\\[8pt]
+      \normalfont\fontsize{14}{14}\bfseries\@thesisSubTitleKO
+      \end{center}
+      \vspace{0.5cm}
+      \vspace{0.5cm}
+  }  
+  }{ % End of env
+  \vfill
+	{\noindent\rule{\linewidth}{.5mm}}
+	\\ \normalfont\fontsize{9}{9}{\textbf{주제어} : \normalfont\fontsize{9}{9}\@thesisKeywordsKor}
   \cleardoublepage % Start a new page after the abstract
   %\pagenumbering{arabic}
 }
@@ -295,29 +473,77 @@ Approved by Examination Committee}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \RequirePackage{titlesec}
 
-% Custom chapter formatting
-\titleformat{\chapter}[block]
-  {\normalfont\fontsize{16}{20}\bfseries\centering} % Font size 16pt, bold, centered
-  {\thechapter.} % Label with chapter number
-  {16pt} % Space between label and title
-  {} % Title format
-\titlespacing*{\chapter}
-  {0pt} % Left margin
-  {0pt} % Space before
-  {40pt} % Space after
-\renewcommand{\thechapter}{\Roman{chapter}} % Roman numerals for chapters
+% format for title in text
+\ifthenelse{\equal{\KUthesis@lang}{eng}}
+    { % Eng
+        % Custom chapter formatting
+        \titleformat{\chapter}[block]
+          {\normalfont\fontsize{16}{20}\bfseries\centering} % Font size 16pt, bold, centered
+          {\thechapter.} % Label with chapter number
+          {16pt} % Space between label and title
+          {} % Title format
+        \titlespacing*{\chapter}{0pt}{0pt}{40pt} % Left margin, space before, space after
+        \renewcommand{\thechapter}{\Roman{chapter}} % Roman numerals for chapters
 
-% Custom section formatting
-\titleformat{\section}
-  {\normalfont\fontsize{14}{18}\bfseries\raggedright} % Font size 14pt, bold
-  {\thesection} % Label with section number
-  {1em} % Space between label and title
-  {} % Title format
-\titlespacing*{\section}
-  {0pt} % Left margin
-  {24pt} % Space before
-  {12pt} % Space after
-\renewcommand{\thesection}{\arabic{section}} % Arabic numbering for sections
+        % Custom section formatting
+        \titleformat{\section}
+          {\normalfont\fontsize{14}{18}\bfseries\raggedright} % Font size 14pt, bold
+          {\thesection} % Label with section number
+          {1em} % Space between label and title
+          {} % Title format
+        \titlespacing*{\section}{0pt}{24pt}{12pt}
+        \renewcommand{\thesection}{\arabic{section}} % Arabic numbering for sections
+    }
+    { % Kor
+        % Custom chapter formatting
+        \titleformat{\chapter}[block]
+          {\normalfont\fontsize{16}{16}\bfseries\centering} % Font size 16pt, bold, centered
+          {제\thechapter장} % Label with chapter number
+          {16pt} % Space between label and title
+          {} % Title format
+        \titlespacing*{\chapter}
+          {0pt} % Left margin
+          {0pt} % Space before
+          {40pt} % Space after
+        \renewcommand{\thechapter}{\arabic{chapter}} % Arabic numerals for chapters
+
+        % Custom section formatting
+        \titleformat{\section}
+          {\normalfont\fontsize{14}{14}\bfseries\raggedright} % Font size 14pt, bold
+          {제\thesection절} % Label with section number
+          {1em} % Space between label and title
+          {} % Title format
+        \titlespacing*{\section}
+          {0pt} % Left margin
+          {24pt} % Space before
+          {12pt} % Space after
+        \renewcommand{\thesection}{\arabic{section}} % Arabic numbering for sections
+
+        % Custom section formatting
+        \titleformat{\subsection}
+          {\normalfont\fontsize{11}{11}\bfseries\raggedright} % Font size 14pt, bold
+          {\thesubsection.} % Label with section number
+          {1em} % Space between label and title
+          {} % Title format
+        \titlespacing*{\subsection}
+          {0pt} % Left margin
+          {24pt} % Space before
+          {12pt} % Space after
+        \renewcommand{\thesubsection}{\arabic{subsection}} % Arabic numbering for sections
+
+        % Custom section formatting
+        \titleformat{\subsubsection}
+          {\normalfont\fontsize{11}{11}\bfseries\raggedright} % Font size 14pt, bold
+          {\thesubsubsection.} % Label with section number
+          {1em} % Space between label and title
+          {} % Title format
+        \titlespacing*{\subsubsection}
+          {0pt} % Left margin
+          {24pt} % Space before
+          {12pt} % Space after
+        \renewcommand{\thesubsubsection}{\gana{subsubsection}} % Arabic numbering for sections
+    }
+% end format for title in text
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,24 +1,29 @@
-% The example tex file for KU thesis.
+%% The example tex file for KU thesis.
 %% Konkuk University Thesis Example for LaTeX
 %%
 %% Author: Jinheung, Kim
 %% Email: jinheung.kim1216@gmail.com
 %% git: https://github.com/jinheungkim1216/KUthesis
+%% version: 2.0.0
 
 \documentclass[11pt]{report}
 
-\usepackage{KUthesis} % default type is doctor
-%\usepackage[type=doctor]{KUthesis}
-%\usepackage[type=master]{KUthesis}
+\usepackage[lang=kor]{KUthesis} % default type is doctor
+%\usepackage[lang=kor, type=doctor]{KUthesis}
+%\usepackage[lang=kor, type=master]{KUthesis}
 
 \usepackage{graphicx}
 \usepackage{hyperref}
+
+\setcounter{secnumdepth}{3} % display number with subsubsection
 
 % BIB file
 \addbibresource{example.bib}
 
 % packages for examples
 \usepackage{lipsum}
+\usepackage{jiwonlipsum}
+
 
 %%%%%%%%%%%%%%%%%%%%%
 % 
@@ -35,12 +40,17 @@
 %%%%%%%%%%%%%%%%%%%%%
 
 % Thesis Informations
-\thesisTitle{The thesis title} % title
-\thesisDateFront{August, 2024} % Date of front Page
-\thesisDateSubFront{May, 2024} % Date of SubFront Page
-\thesisDateApproval{May, 2024} % Date of Approval Page
-\thesisSupervisor{Supervisor}  % Your supervisor name
-\thesisDegree{Doctor of Philosophy in Physics} % Degree in subfontpage
+\thesisTitle{thesis title} % title
+\thesisSubTitle{thesis sub title}% Thesis subtitle
+
+\thesisTitleKO{논문 한글 제목} % title(korean)
+\thesisSubTitleKO{논문 한글 부제목} % Thesis subtitle (korean)
+
+\thesisDateFront{2024년 2월} % Date of front Page
+\thesisDateSubFront{2024년 10월} % Date of SubFront Page
+\thesisDateApproval{2024년, 11월} % Date of Approval Page
+\thesisSupervisor{홍길동}  % Your supervisor name
+\thesisDegree{물리학} % Degree in subfontpage
 %\thesisDegree{Master of Science in Physics} % Degree in subfontpage
 
 % Author Informations
@@ -49,11 +59,10 @@
 \thesisDepartment{Department of Physics} % Department
 \thesisSchool{Graduate School of Konkuk University} % Graduate School
 
-\thesisTitleKO{한글 제목} % title(korean)
 \thesisFirstNameKO{진흥} % first name (korean)
 \thesisLastNameKO{김} % last name (korean)
 \thesisDepartmentKO{물리학과} % Department (korean)
-\thesisSchoolKO{일반대학원} % Graduate School (korean)
+\thesisSchoolKO{건국대학교 대학원} % Graduate School (korean)
 
 % Committee
 \thesisCommitteeI{Chairman}
@@ -67,6 +76,9 @@
 %\thesisCommitteeIII{}
 %\thesisCommitteeIV{}
 %\thesisCommitteeV{}
+
+\thesisKeywordsKor{키워드1, 키워드2, ...}
+\thesisKeywords{Keyword1, Keyword2, ...}
 
 %%%%%%%%%%%%%%%%%%%%%
 % 
@@ -97,36 +109,39 @@
 
 %%%%%%%%%%%%%%%%%%%%%
 % 
-%  Abstract page (EN)
+%  Abstract page (KOs)
 %
 %%%%%%%%%%%%%%%%%%%%%
+% For the Korean thesis, the Korean abstract will be placed in front of the main text.
+\begin{KUabstractKO}
+\textbf{국문논문의 경우 국문초록이 본문 앞에 영문초록을 맨 뒤에 서술합니다.}
 
-\begin{KUabstract}
-\lipsum[1-2]\footnote{Keyword: Keyword1, Keyword2, ...}
-\end{KUabstract}
+\jiwon[1-2]
+\end{KUabstractKO}
 
 
 \pagenumbering{arabic} % Switch to Arabic numerals for the main text
 \cleardoublepage
+
 %%%%%%%%%%%%%%%%%%%%%
 % 
 %  Main text
 %
 %%%%%%%%%%%%%%%%%%%%%
-\chapter{This is a chapter}
-The citation styles are \cite{Weinberg:1967tq} and \cite{Glashow:1961tr,Salam:1964ry,Glashow:1970gm}.
+\chapter{장 제목}
+한 논문을 인용시에는 \cite{Weinberg:1967tq} 이렇게 다수일 경우에는 이렇게  \cite{Glashow:1961tr,Salam:1964ry,Glashow:1970gm} 나타납니다.
 
-\section{This is a section}
+\section{절 제목}
 
 \begin{figure}[h] \centering
 \begin{center}
 \includegraphics[width=.1\textwidth]{UI_Mark.jpg}
-\caption{This is mark.}
+\caption{건국대학교 마크}
 \end{center}
 \end{figure}
 
 
-\lipsum[1]
+\jiwon[4-5]
 
 \begin{table}[h]
 \begin{center}
@@ -138,13 +153,13 @@ The citation styles are \cite{Weinberg:1967tq} and \cite{Glashow:1961tr,Salam:19
   \hline
 \end{tabular}
 \end{center}
-\caption{The simple table}
+\caption{표 예시}
 \end{table}
 
-\subsection{This is a subsection}
-\lipsum[1]
-\subsubsection{This is a subsubsection}
-\lipsum[1]
+\subsection{항 제목}
+\jiwon[6]
+\subsubsection{목 제목}
+\jiwon[7]
 
 
 %%%%%%%%%%%%%%%%%%%%%
@@ -152,9 +167,8 @@ The citation styles are \cite{Weinberg:1967tq} and \cite{Glashow:1961tr,Salam:19
 %  Reference
 %
 %%%%%%%%%%%%%%%%%%%%%
-
-\printbibliography[title={\normalfont\fontsize{16}{16}\bfseries References}]
-\addcontentsline{toc}{chapter}{References}
+\printbibliography[title={\normalfont\fontsize{16}{16}\bfseries 참고문헌}]
+\addcontentsline{toc}{chapter}{참고문헌}
 
 \cleardoublepage
 \phantomsection  
@@ -164,25 +178,27 @@ The citation styles are \cite{Weinberg:1967tq} and \cite{Glashow:1961tr,Salam:19
 %
 %%%%%%%%%%%%%%%%%%%%%
 
-\chapter*{Appendix}
+\chapter*{부록(선택)}
 %% provide three setup instructions:
-\addcontentsline{toc}{chapter}{Appendix} % write to the toc file
-\setcounter{section}{0}
-\renewcommand\thesection{\Alph{section}}
-\section{The first appendix }
+\addcontentsline{toc}{chapter}{부록} % write to the toc file
 
-This is appendex
-
+\section*{부록 A}
+부록
 
 %%%%%%%%%%%%%%%%%%%%%
 % 
-%  Abstract page (KOs)
+%  Abstract page (EN)
 %
 %%%%%%%%%%%%%%%%%%%%%
-\begin{KUabstractKO}
-한글 초록 \\
-\lipsum[1-2]\footnote{Keyword: 키워드1, 키워드2, ...}
-\end{KUabstractKO}
+% 
 
+\begin{KUabstract}
+\lipsum[1]
+\end{KUabstract}
+
+
+
+
+% End of document
 \end{document}
 
